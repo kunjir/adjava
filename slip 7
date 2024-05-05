@@ -1,0 +1,99 @@
+Q.1)Write a JSP application to accept a user name and greets to the user according to the system Time.
+Example: If user name is Admin
+Output:
+If it is morning then display message in red color as,
+Good morning, Admin
+Today’s date: dd/mm/yyyy format
+Current time: hh:mm:ss format
+If it is afternoon then display message in green color as,
+Good afternoon, Admin
+Today’s date: dd/mm/yyyy format
+Current time: hh:mm:ss format
+If it is evening then display message in blue color as,
+Good evening, Admin
+Today’s date: dd/mm/yyyy format
+Current time: hh:mm:ss format
+(Hint: To display date and time use GregorianCalendar and Calendar class)
+<%@ page import="java.util.Calendar" %>
+<%@ page import="java.util.GregorianCalendar" %>
+<%@ page import="java.text.SimpleDateFormat" %>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Greeting Page</title>
+<style>
+.morning { color: red; }
+.afternoon { color: green; }
+.evening { color: blue; }
+</style>
+</head>
+<body>
+<%
+String username = request.getParameter("username");
+// Get the current time
+Calendar calendar = new GregorianCalendar();
+int hour = calendar.get(Calendar.HOUR_OF_DAY);
+String greeting = "";
+String colorClass = "";
+// Determine the greeting message and color based on the time of day
+if (hour >= 6 && hour < 12) {
+greeting = "Good morning, " + username;
+colorClass = "morning";
+} else if (hour >= 12 && hour < 18) {
+greeting = "Good afternoon, " + username;
+colorClass = "afternoon";
+} else {
+greeting = "Good evening, " + username;
+colorClass = "evening";
+}
+// Format the current date and time
+SimpleDateFormat dateFormat = new
+SimpleDateFormat("dd/MM/yyyy");
+SimpleDateFormat timeFormat = new
+SimpleDateFormat("HH:mm:ss");
+String date = dateFormat.format(calendar.getTime());
+String time = timeFormat.format(calendar.getTime());
+%>
+<h2 class="<%= colorClass %>"><%= greeting %></h2>
+<p>Today's date: <%= date %></p>
+<p>Current time: <%= time %></p>
+</body>
+</html>
+
+Q.2) Design a servlet to display “Welcome IP address of client” to first time visitor. Display Welcome-back IP address of client” if the user is revisiting the page. (Use Cookies) (Hint: Use req.getRemoteAddr() to get IP address of client).
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+public class WelcomeServlet extends HttpServlet {
+public void doGet(HttpServletRequest request, HttpServletResponse
+response)
+throws ServletException, IOException {
+String ipAddress = request.getRemoteAddr();
+boolean visitedBefore = false;
+Cookie[] cookies = request.getCookies();
+if (cookies != null) {
+for (Cookie cookie : cookies) {
+if (cookie.getName().equals("visitedBefore")) {
+visitedBefore = true;
+break;
+}
+}
+}
+if (!visitedBefore) {
+Cookie visitedCookie = new Cookie("visitedBefore", "true");
+visitedCookie.setMaxAge(60 * 60 * 24 * 365); // 1 year
+response.addCookie(visitedCookie);
+response.setContentType("text/html");
+PrintWriter out = response.getWriter();
+out.println("<html><body>");
+out.println("<h2>Welcome " + ipAddress + "</h2>");
+out.println("</body></html>");
+} else {
+response.setContentType("text/html");
+PrintWriter out = response.getWriter();
+out.println("<html><body>");
+out.println("<h2>Welcome back " + ipAddress + "</h2>");
+out.println("</body></html>");
+}
+}
+}
