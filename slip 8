@@ -1,0 +1,106 @@
+Q.1)Write a JSP application to accept the details of Teacher (TID, TName, Salary) and display it in tabular format.
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Teacher Details</title>
+</head>
+<body>
+    <h1>Teacher Details</h1>
+    <form action="displayTeacherDetails.jsp" method="post">
+        <label for="tid">Teacher ID:</label>
+        <input type="text" id="tid" name="tid" required><br>
+        <label for="tname">Teacher Name:</label>
+        <input type="text" id="tname" name="tname" required><br>
+        <label for="salary">Salary:</label>
+        <input type="text" id="salary" name="salary" required><br>
+        <input type="submit" value="Submit">
+    </form>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Teacher Details</title>
+</head>
+<body>
+    <h1>Teacher Details</h1>
+    <table border="1">
+        <tr>
+            <th>Teacher ID</th>
+            <th>Teacher Name</th>
+            <th>Salary</th>
+        </tr>
+        <tr>
+            <td><%= request.getParameter("tid") %></td>
+            <td><%= request.getParameter("tname") %></td>
+            <td><%= request.getParameter("salary") %></td>
+        </tr>
+    </table>
+</body>
+</html>
+
+Q.2) Design the table User (username, password) using Database. Design HTML login screen. Accept the user name and password from the user. Write a servlet program to accept the login name and password and validates it from the database you have created. If it is correct then display Welcome.html otherwise display Error.html.
+HTML Code:
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login</title>
+</head>
+<body>
+<h2>Login</h2>
+<form action="LoginServlet" method="post">
+Username: <input type="text" name="username"><br>
+Password: <input type="password" name="password"><br>
+<input type="submit" value="Login">
+</form>
+</body>
+</html>
+Servlet Code:
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import java.sql.*;
+public class LoginServlet extends HttpServlet {
+public void doPost(HttpServletRequest request, HttpServletResponse
+response)
+throws ServletException, IOException {
+String username = request.getParameter("username");
+String password = request.getParameter("password");
+boolean isAuthenticated = authenticateUser(username, password);
+if (isAuthenticated) {
+response.sendRedirect("Welcome.html");
+} else {
+response.sendRedirect("Error.html");
+}
+}
+private boolean authenticateUser(String username, String password) {
+try {
+// Load the PostgreSQL JDBC driver
+Class.forName("org.gjt.mm.mysql.Driver");
+Connection
+conn=DriverManager.getConnection("jdbc:mysql://localhost/pooja","root","");
+PreparedStatement ps = conn.prepareStatement(
+"SELECT * FROM User WHERE username = ? AND password =
+?"
+);
+ps.setString(1, username);
+ps.setString(2, password);
+ResultSet rs = ps.executeQuery();
+if (rs.next()) {
+conn.close();
+return true;
+} else {
+conn.close();
+return false; }
+} catch (Exception e) {
+e.printStackTrace();
+return false; // Error occurred
+}
+}
+}
