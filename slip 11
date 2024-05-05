@@ -1,0 +1,151 @@
+Q.1) Write a JSP program to check whether given number is perfect or not.
+(Use include directive) 
+Index.html file:
+<!DOCTYPE html>
+<html>
+<head>
+<title>PERFECT NUMBER</title>
+</head>
+<body>
+<form action="perfect.jsp" method="post">
+Enter Number :<input type="text" name="num">
+<input type="submit" value="Submit" name="s1">
+</form>
+</body>
+</html>
+
+
+Perfect.jsp file:
+<%@ page import="java.util.*" %>
+
+
+<%
+if(request.getParameter("s1")!=null)
+  {
+	Integer num,a,i,sum = 0;
+	
+	num = Integer.parseInt(request.getParameter("num"));
+	a = num;
+
+
+	for(i=1;i<a;i++)
+	{
+		if(a%i==0)
+		{
+			sum=sum + i;
+		}
+	}
+	if(sum==a)
+	{
+		out.println(+num+ "is a perfect number");
+	}
+	else
+	{
+		out.println(+num+ "is not a perfect number");
+	}
+  }	
+%>
+
+Q.2) Write a java program using Inter Thread Communication.
+// Java program to demonstrate inter-thread communication 
+// (wait(), join() and notify()) 
+
+import java.util.Scanner; 
+
+public class threadexample 
+{ 
+	public static void main(String[] args) throws InterruptedException 
+	{ 
+		final PC pc = new PC(); 
+
+		// Create a thread object that calls pc.produce() 
+		Thread t1 = new Thread(new Runnable() 
+		{ 
+			@Override
+			public void run() 
+			{ 
+				try
+				{ 
+					pc.produce(); 
+				} 
+				catch(InterruptedException e) 
+				{ 
+					e.printStackTrace(); 
+				} 
+			} 
+		}); 
+
+		// Create another thread object that calls 
+		// pc.consume() 
+		Thread t2 = new Thread(new Runnable() 
+		{ 
+			@Override
+			public void run() 
+			{ 
+				try
+				{ 
+					pc.consume(); 
+				} 
+				catch(InterruptedException e) 
+				{ 
+					e.printStackTrace(); 
+				} 
+			} 
+		}); 
+
+		// Start both threads 
+		t1.start(); 
+		t2.start(); 
+
+		// t1 finishes before t2 
+		t1.join(); 
+		t2.join(); 
+	} 
+
+	// PC (Produce Consumer) class with produce() and 
+	// consume() methods. 
+	public static class PC 
+	{ 
+		// Prints a string and waits for consume() 
+		public void produce()throws InterruptedException 
+		{ 
+			// synchronized block ensures only one thread 
+			// running at a time. 
+			synchronized(this) 
+			{ 
+				System.out.println("producer thread running"); 
+
+				// releases the lock on shared resource 
+				wait(); 
+
+				// and waits till some other method invokes notify(). 
+				System.out.println("Resumed"); 
+			} 
+		} 
+
+		// Sleeps for some time and waits for a key press. After key 
+		// is pressed, it notifies produce(). 
+		public void consume()throws InterruptedException 
+		{ 
+			// this makes the produce thread to run first. 
+			Thread.sleep(1000); 
+			Scanner s = new Scanner(System.in); 
+
+			// synchronized block ensures only one thread 
+			// running at a time. 
+			synchronized(this) 
+			{ 
+				System.out.println("Waiting for return key."); 
+				s.nextLine(); 
+				System.out.println("Return key pressed"); 
+
+				// notifies the produce thread that it 
+				// can wake up. 
+				notify(); 
+
+				// Sleep 
+				Thread.sleep(2000); 
+			} 
+		} 
+	} 
+}
