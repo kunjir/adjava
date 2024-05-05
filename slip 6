@@ -1,0 +1,79 @@
+Q.1) Write a JSP application to accept the details of Emp (Eno, EName, Salary) and display it in Tabular format on the browser.
+
+Index.html
+	<html>
+	    <body>
+	        <form action="UpdateEmp.jsp" >
+	            Enter Employee Number<input type="text" name="txtEno" ><br>
+	            Enter Name<input type="text" name="txtName" ><br>
+	            Enter age<input type="text" name="txtAge" ><br>
+	            Enter Salary<input type="text" name="txtSal" ><br>
+	            <input type="reset" ><input type="submit">         
+	        </form> 
+	    </body>
+	</html>
+
+	
+	UpdateEmp.jsp
+
+	<%@page contentType="text/html" import="java.sql.*" %>
+	<html>
+	    <body>
+	        <h1>Employee Record Update</h1>
+	        <%
+	        String eno=request.getParameter("txtEno");    
+	        String name=request.getParameter("txtName");
+	        String age = request.getParameter("txtAge");
+	        String sal = request.getParameter("txtSal");
+	               try{
+	    Class.forName("com.mysql.jdbc.Driver");
+	    Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/empdb","root","tiger");
+	    PreparedStatement stmt = con.prepareStatement("select * from emp where eno=?");
+	    stmt.setString(1, eno);  
+	    ResultSet rs = stmt.executeQuery();
+	    if(rs.next()){
+	        out.println("<h1> Employee "+name+" Exist </h1>");
+	        PreparedStatement pst1= con.prepareStatement("update emp set salary=? where eno=?");
+	        PreparedStatement pst2= con.prepareStatement("update emp set age=? where eno=?");
+	        pst1.setString(1, sal);    pst1.setString(2, eno);
+	        pst2.setString(1, age);   pst2.setString(2, eno);
+	        pst1.executeUpdate();   pst2.executeUpdate();
+	    }
+	    else{
+	    out.println("<h1>Employee Record not exist !!!!!</h1>");
+	    
+	    }
+	        }catch(Exception e){out.println(e);}
+	   %>
+	
+	    </body>
+	</html>
+	
+
+Q.2) Define a thread called “PrintText_Thread” for printing text on command prompt for n number of times. Create three threads and run them. Pass the text and n as parameters to the thread constructor. Example:
+i. First thread prints “I am in FY” 10 times
+ii. Second thread prints “I am in SY” 20 times
+iii. Third thread prints “I am in TY” 30 times
+class PrintText_Thread extends Thread {
+private String text;
+private int n;
+public PrintText_Thread(String text, int n) {
+this.text = text;
+this.n = n;
+}
+synchronized public void run() {
+for (int i = 0; i < n; i++) {
+System.out.println(text);
+}
+}
+}
+public class PrintTextExample {
+public static void main(String[] args) {
+PrintText_Thread thread1 = new PrintText_Thread("I am in FY", 10);
+PrintText_Thread thread2 = new PrintText_Thread("I am in SY", 20);
+PrintText_Thread thread3 = new PrintText_Thread("I am in TY", 30);
+thread1.start();
+thread2.start();
+thread3.start();
+}
+}
