@@ -1,0 +1,82 @@
+Q.1) Write a JSP program accept a number and display reverse number.
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Reverse Number</title>
+</head>
+<body>
+    <h1>Reverse Number</h1>
+    <form method="post" action="ReverseNumber.jsp">
+        Enter a number: <input type="text" name="number">
+        <input type="submit" value="Reverse">
+    </form>
+    
+    <%@ page import="java.util.Scanner" %>
+    <%
+        String numberStr = request.getParameter("number");
+        if (numberStr != null && !numberStr.isEmpty()) {
+            int number = Integer.parseInt(numberStr);
+            int reversedNumber = 0;
+            while (number != 0) {
+                int digit = number % 10;
+                reversedNumber = reversedNumber * 10 + digit;
+                number /= 10;
+            }
+            out.println("<p>Reverse of the number is: " + reversedNumber + "</p>");
+        }
+    %>
+</body>
+</html>
+
+Q.2) Write a JDBC program to perform search operation on Person table.
+1. Search all the person born in the year 1986.
+2. Search all the females born between 2000- 2005.
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+public class PersonSearch {
+public static void main(String[] args) {
+try
+{
+Class.forName("org.gjt.mm.mysql.Driver");
+Connection con=DriverManager.getConnection("jdbc:mysql://localhost/pooja","root","");
+searchPersonsBornIn1986(con);
+searchFemalesBornBetween2000And2005(con);
+} catch (SQLException ex) {
+ex.printStackTrace();
+}
+}
+private static void searchPersonsBornIn1986(Connection con) throws SQLException {
+String query = "SELECT * FROM Person WHERE birth_year = ?";
+try (PreparedStatement pst = con.prepareStatement(query)) {
+pst.setInt(1, 1986);
+ResultSet rs = pst.executeQuery();
+System.out.println("Persons born in 1986:");
+while (rs.next()) {
+System.out.println("Name: " + rs.getString("name") + ", Gender: " +
+rs.getString("gender") + ", Birth Year: " + rs.getInt("birth_year"));
+}
+}
+}
+private static void searchFemalesBornBetween2000And2005(Connection con) throws
+SQLException {
+String query = "SELECT * FROM Person WHERE gender = ? AND birth_year
+BETWEEN ? AND ?";
+try (PreparedStatement pst = con.prepareStatement(query)) {
+pst.setString(1, "Female");
+pst.setInt(2, 2000);
+pst.setInt(3, 2005);
+ResultSet rs = pst.executeQuery();
+System.out.println("Females born between 2000 and 2005:");
+while (rs.next()) {
+System.out.println("Name: " + rs.getString("name") + ", Gender: " +
+rs.getString("gender") + ", Birth Year: " + rs.getInt("birth_year"));
+}
+}
+}
+}
