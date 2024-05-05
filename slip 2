@@ -1,0 +1,72 @@
+.1) The following JSP program calculates factorial values for an integer number, while the input is taken from an HTML form.
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Factorial Calculator</title>
+</head>
+<body>
+    <h1>Factorial Calculator</h1>
+    <form action="factorial.jsp" method="post">
+        Enter a number: <input type="number" name="number" required><br>
+        <input type="submit" value="Calculate Factorial">
+    </form>
+    <%@ page import="java.math.BigInteger" %>
+    <%!
+        BigInteger factorial(int n) {
+            if (n == 0 || n == 1) {
+                return BigInteger.ONE;
+            } else {
+                BigInteger result = BigInteger.valueOf(n);
+                while (--n > 1) {
+                    result = result.multiply(BigInteger.valueOf(n));
+                }
+                return result;
+            }
+        }
+    %>
+    <%
+        String numberStr = request.getParameter("number");
+        if (numberStr != null && !numberStr.isEmpty()) {
+            int number = Integer.parseInt(numberStr);
+            BigInteger result = factorial(number);
+            out.println("<p>Factorial of " + number + " is: " + result + "</p>");
+        } else {
+            out.println("<p>Please enter a number.</p>");
+        }
+    %>
+</body>
+</html>
+
+Q.3 Write a JDBC program to display all the countries located in the West Region. Create a table Country with fields (Name, continent, Capital,Region). Insert values in the table.
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class CountriesInWestRegion {
+    public static void main(String[] args) {
+    
+        try
+{
+Class.forName("org.gjt.mm.mysql.Driver");
+Connection con=DriverManager.getConnection("jdbc:mysql://localhost/pooja","root","");
+
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery("SELECT * FROM Country WHERE Region = 'West'")) {
+
+            while (rs.next()) {
+                System.out.println("Name: " + rs.getString("Name") +
+                                   ", Continent: " + rs.getString("Continent") +
+                                   ", Capital: " + rs.getString("Capital") +
+                                   ", Region: " + rs.getString("Region"));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
