@@ -1,0 +1,104 @@
+Q1.) Create a JSP page to accept a number from an user and display it in words: Example: 123  One Two Three. The output should be in red color.
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Number to Words Converter</title>
+<style>
+    .red {
+        color: red;
+    }
+</style>
+</head>
+<body>
+    <h1>Number to Words Converter</h1>
+    <form action="convert.jsp" method="post">
+        Enter a number: <input type="text" name="number"><br>
+        <input type="submit" value="Convert">
+    </form>
+</body>
+</html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Number to Words Converter</title>
+<style>
+    .red {
+        color: red;
+    }
+</style>
+</head>
+<body>
+    <h1>Number to Words Converter</h1>
+    <%@ page import="java.util.Map" %>
+    <%@ page import="java.util.HashMap" %>
+    <%@ page import="java.util.Scanner" %>
+    <%@ page import="java.util.Arrays" %>
+    <%@ page import="java.util.List" %>
+
+    <%
+        String numberStr = request.getParameter("number");
+        if (numberStr != null && !numberStr.isEmpty()) {
+            Map<Integer, String> digitMap = new HashMap<>();
+            digitMap.put(0, "Zero");
+            digitMap.put(1, "One");
+            digitMap.put(2, "Two");
+            digitMap.put(3, "Three");
+            digitMap.put(4, "Four");
+            digitMap.put(5, "Five");
+            digitMap.put(6, "Six");
+            digitMap.put(7, "Seven");
+            digitMap.put(8, "Eight");
+            digitMap.put(9, "Nine");
+
+            out.println("<p>Your number in words: ");
+            char[] digits = numberStr.toCharArray();
+            for (char digit : digits) {
+                int num = Character.getNumericValue(digit);
+                out.println("<span class='red'>" + digitMap.get(num) + "</span> ");
+            }
+            out.println("</p>");
+        } else {
+            out.println("<p>Please enter a number.</p>");
+        }
+    %>
+    <a href="index.jsp">Go Back</a>
+</body>
+</html>
+
+2.Write a JDBC program to display all the details of the Person table in proper format on the screen. Create a Person table with fields as PID, name, gender, birth_year. Insert values in Person table.
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class PersonDetails {
+    public static void main(String[] args) {
+        try
+{
+Class.forName("org.gjt.mm.mysql.Driver");
+Connection con=DriverManager.getConnection("jdbc:mysql://localhost/pooja","root","");
+
+             Statement st = con.createStatement();
+             ResultSet rs = st.executeQuery("SELECT * FROM Person")) {
+
+            System.out.println("PID\tName\tGender\tBirth Year");
+            while (rs.next()) {
+                System.out.print(rs.getInt("PID") + "\t");
+                System.out.print(rs.getString("name") + "\t");
+                System.out.print(rs.getString("gender") + "\t");
+                System.out.println(rs.getInt("birth_year"));
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
+
+
