@@ -1,0 +1,65 @@
+Q.1) Write a JSP program to check whether a given number is Armstrong or not.
+1)checkNumber.jsp:
+
+<html>
+<form method="post" action="../ArmstrongServlet">
+Enter number:<input type="text" name="number">
+<input type="submit" value="Check">
+</form>
+</html>
+
+2)ArmstrongServlet:
+
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class ArmstrongServlet extends HttpServlet {
+public void doPost(HttpServletRequest request, HttpServletResponse response)throws IOException, ServletException{
+PrintWriter out = response.getWriter();
+String input=request.getParameter("number");
+int num=Integer.parseInt(input);
+int i = num;
+int number=0,remainder;
+while(num > 0){
+remainder = num % 10;
+number = number + (int)Math.pow(remainder,3);
+num = num / 10;
+}
+if(number == i)
+out.println(i+" is an Armstrong Number");
+}
+}else{
+out.println(i+" is not a Armstrong Number");
+}
+}
+}
+Q.2) Write a program to display information about the ResultSet like number of columns available in the ResultSet and SQL type of the column. Use Person table.(Use ResultSetMetaData).
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class ResultSetInfo {
+public static void main(String[] args) {
+try
+{
+Class.forName("org.gjt.mm.mysql.Driver");
+Connection con=DriverManager.getConnection("jdbc:mysql://localhost/pooja","root","");
+Statement st = con.createStatement();
+ResultSet rs = st.executeQuery("SELECT * FROM Person")) {
+ResultSetMetaData rsmd = rs.getMetaData();
+int columnCount = rsmd.getColumnCount();
+System.out.println("Number of Columns: " + columnCount);
+System.out.println("Column Details:");
+for (int i = 1; i <= columnCount; i++) {
+System.out.println("Name: " + rsmd.getColumnName(i) +
+", Type: " + rsmd.getColumnTypeName(i));
+}
+} catch (SQLException ex) {
+ex.printStackTrace();
+}
+}
+}
