@@ -1,0 +1,95 @@
+Q.1) The following JSP program shows the Fibonacci series up to a particular term, while the input is taken from an HTML form.
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Fibonacci Series</title>
+</head>
+<body>
+    <h1>Fibonacci Series</h1>
+    <form action="fibonacci.jsp" method="post">
+        Enter the number of terms: <input type="number" name="terms" required><br>
+        <input type="submit" value="Generate Fibonacci Series">
+    </form>
+    <%@ page import="java.util.List" %>
+    <%!
+        List<Integer> generateFibonacciSeries(int terms) {
+            List<Integer> series = new ArrayList<>();
+            if (terms >= 1) {
+                series.add(0);
+            }
+            if (terms >= 2) {
+                series.add(1);
+            }
+            if (terms >= 3) {
+                for (int i = 2; i < terms; i++) {
+                    series.add(series.get(i - 1) + series.get(i - 2));
+                }
+            }
+            return series;
+        }
+    %>
+    <%
+        String termsStr = request.getParameter("terms");
+        if (termsStr != null && !termsStr.isEmpty()) {
+            int terms = Integer.parseInt(termsStr);
+            List<Integer> fibonacciSeries = generateFibonacciSeries(terms);
+            out.println("<p>Fibonacci Series up to term " + terms + ": ");
+            for (int i = 0; i < fibonacciSeries.size(); i++) {
+                out.print(fibonacciSeries.get(i));
+                if (i < fibonacciSeries.size() - 1) {
+                    out.print(", ");
+                }
+            }
+            out.println("</p>");
+        } else {
+            out.println("<p>Please enter the number of terms.</p>");
+        }
+    %>
+</body>
+</html>
+
+Q.2 Write a JDBC program to insert the records into the table Employee(ID,name,salary)
+using PreparedStatement interface. Accept details of Employees from user.
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Scanner;
+
+public class EmployeeInserter {
+    public static void main(String[] args) {
+           Scanner scanner = new Scanner(System.in); 
+        try
+{
+Class.forName("org.gjt.mm.mysql.Driver");
+Connection con=DriverManager.getConnection("jdbc:mysql://localhost/pooja","root","");
+
+            String query = "INSERT INTO Employee (ID, name, salary) VALUES (?, ?, ?)";
+            PreparedStatement pst = con.prepareStatement(query);
+
+            System.out.println("Enter Employee Details");
+            System.out.print("ID: ");
+            int id = scanner.nextInt();
+            scanner.nextLine();  // Consume the newline
+            System.out.print("Name: ");
+            String name = scanner.nextLine();
+            System.out.print("Salary: ");
+            double salary = scanner.nextDouble();
+
+            pst.setInt(1, id);
+            pst.setString(2, name);
+            pst.setDouble(3, salary);
+
+            int rowsAffected = pst.executeUpdate();
+            System.out.println(rowsAffected + " row(s) affected");
+
+            pst.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+}
