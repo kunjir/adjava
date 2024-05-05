@@ -1,0 +1,63 @@
+Q.1) Write a JSP program to check whether given number is Armstrong or not. (Use include directive)
+1)checkNumber.jsp:
+
+<html>
+<form method="post" action="../ArmstrongServlet">
+Enter number:<input type="text" name="number">
+<input type="submit" value="Check">
+</form>
+</html>
+
+2)ArmstrongServlet:
+
+import java.io.*;
+import java.sql.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+
+public class ArmstrongServlet extends HttpServlet {
+public void doPost(HttpServletRequest request, HttpServletResponse response)throws IOException, ServletException{
+PrintWriter out = response.getWriter();
+String input=request.getParameter("number");
+int num=Integer.parseInt(input);
+int i = num;
+int number=0,remainder;
+while(num > 0){
+remainder = num % 10;
+number = number + (int)Math.pow(remainder,3);
+num = num / 10;
+}
+if(number == i)
+out.println(i+" is an Armstrong Number");
+}
+}else{
+out.println(i+" is not a Armstrong Number");
+}
+}
+}
+Q.2) Write a JDBC program to display all the countries located in the West Region. Create a table Country with fields (Name, continent, Capital,Region). Insert values in the table.
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+public class CountriesInWestRegion {
+public static void main(String[] args) {
+try
+{
+Class.forName("org.gjt.mm.mysql.Driver");
+Connection con=DriverManager.getConnection("jdbc:mysql://localhost/pooja","root","");
+Statement st = con.createStatement();
+ResultSet rs = st.executeQuery("SELECT * FROM Country WHERE Region = 'West'"))
+{
+while (rs.next()) {
+System.out.println("Name: " + rs.getString("Name") +
+", Continent: " + rs.getString("Continent") +
+", Capital: " + rs.getString("Capital") +
+", Region: " + rs.getString("Region"));
+}
+} catch (SQLException ex) {
+ex.printStackTrace();
+}
+}
+}
