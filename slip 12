@@ -1,0 +1,70 @@
+Q.1) Write a JSP program to accept name and age of a Person and check whether he is eligible for Voting or not.
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+</head>
+<body>
+<form action="Slip29.jsp" method="post">
+Name : <input type="text" name="name">
+
+Age : <input type="text" name="age">
+
+<input type="submit" value="Check">
+</form>
+</body>
+</html>
+
+JSP FILE:
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<%
+String name = request.getParameter("name");
+int age = Integer.parseInt(request.getParameter("age"));
+if(age >=18)
+{
+out.println(name + "\nAllowed to vote");
+}
+else
+{
+out.println(name + "\nNot allowed to vote");
+}
+%>
+Q.2) Write a multithreading program using Runnable interface to blink Text on the frame.
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+class BlinkingText implements Runnable {
+private JLabel label;
+public BlinkingText(JLabel label) {
+this.label = label;
+}
+public void run() {
+try {
+while (true) {
+label.setVisible(!label.isVisible());
+Thread.sleep(500);
+}
+} catch (Exception e) {
+e.printStackTrace();
+}
+}
+}
+public class BlinkingTextFrame extends JFrame {
+private JLabel blinkingLabel;
+public BlinkingTextFrame() {
+setTitle("Blinking text");
+setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+setSize(300, 300);
+setLayout(new FlowLayout());
+blinkingLabel = new JLabel("Dr. D. Y. Patil Collge");
+add(blinkingLabel);
+Thread blinkThread = new Thread(new BlinkingText(blinkingLabel));
+blinkThread.start();
+setVisible(true);
+}
+public static void main(String[] args) {
+new BlinkingTextFrame();
+}
+}
