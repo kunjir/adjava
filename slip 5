@@ -1,0 +1,96 @@
+Q.1)Write a JSP script to display all the prime number’s between 1 to n in Red Color.
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Prime Numbers</title>
+</head>
+<body>
+    <h1>Prime Numbers</h1>
+    <%@ page import="java.util.ArrayList" %>
+    <%!
+        boolean isPrime(int num) {
+            if (num <= 1) {
+                return false;
+            }
+            for (int i = 2; i <= Math.sqrt(num); i++) {
+                if (num % i == 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    %>
+    <%
+        int n = 100; // Change this value to whatever value of n you want
+        out.println("<p>Prime numbers between 1 and " + n + ":</p>");
+        for (int i = 2; i <= n; i++) {
+            if (isPrime(i)) {
+                out.println("<span style='color:red;'>" + i + "</span>&nbsp;");
+            } else {
+                out.println(i + "&nbsp;");
+            }
+        }
+    %>
+</body>
+</html>
+
+2.Write a client-server program which displays the server machine’s date and time on the client machine.
+
+Client Code: 
+import java.io.*;
+import java.net.*;
+
+public class MyClient {
+    public static void main(String[] args) {
+        String host = "localhost";
+        int port = 12345;
+
+        try (Socket socket = new Socket(host, port);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            
+            // Read the date and time sent by the server
+            String dateTime = in.readLine();
+            
+            System.out.println("Server's current date and time: " + dateTime);
+        } catch (UnknownHostException e) {
+            System.out.println("Server not found: " + e.getMessage());
+        } catch (IOException e) {
+            System.out.println("I/O error: " + e.getMessage());
+        }
+    }
+}
+Server Code:
+import java.io.*;
+import java.net.*;
+import java.util.Date;
+
+public class MyServer {
+    public static void main(String[] args) {
+        int port = 12345;
+        
+        try (ServerSocket serverSocket = new ServerSocket(port)) {
+            System.out.println("Server is listening on port " + port);
+            
+            while (true) {
+                try (Socket socket = serverSocket.accept();
+                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+                    
+                    // Send the current date and time to the client
+                    out.println(new Date().toString());
+                    
+                    System.out.println("Sent date and time to the client.");
+                } catch (IOException e) {
+                    System.out.println("Exception caught when trying to listen on port " 
+                        + port + " or listening for a connection");
+                    System.out.println(e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Exception caught when trying to listen on port " 
+                + port + " or listening for a connection");
+            System.out.println(e.getMessage());
+        }
+    }
